@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gene Clash Lair Anchor Calculator</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:700px;margin:20px auto;padding:20px;background:#0f172a;color:#fff}
+.card{background:#1e293b;padding:20px;border-radius:16px}
+input,select,button{width:100%;padding:12px;margin:6px 0 12px;border-radius:8px;border:1px solid #555}
+button{background:#22c55e;color:#000;font-weight:bold;cursor:pointer}
+.result{margin-top:15px;padding:15px;background:#111827;border-radius:12px}
+.big{font-size:64px;font-weight:bold;color:#22c55e;line-height:1}
+.small{opacity:.8}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Gene Clash Lair Anchor Calculator</h1>
+<p>Calculate anchors needed to take the lead. If multiple enemy alliances exist, enter the highest enemy score.</p>
+
+<label>Lair Size</label>
+<select id="size">
+<option value="4400">XS (4,400 pts/anchor)</option>
+<option value="4400">S (4,400 pts/anchor)</option>
+<option value="13400">M (13,400 pts/anchor)</option>
+</select>
+
+<label>Your Alliance Score</label>
+<input id="your" type="number" step="0.1" placeholder="335">
+
+<label>Highest Enemy Score</label>
+<input id="enemy" type="number" step="0.1" placeholder="562.8">
+
+<label>Safety Buffer</label>
+<div>
+<input type="radio" name="buf" value="0" checked> No Buffer<br>
+<input type="radio" name="buf" value="1"> +1 Anchor<br>
+<input type="radio" name="buf" value="2"> +2 Anchors
+</div>
+
+<button onclick="calc()">Calculate</button>
+
+<div class="result" id="result" style="display:none"></div>
+</div>
+
+<script>
+function calc(){
+ let your=Number(document.getElementById('your').value)*1000;
+ let enemy=Number(document.getElementById('enemy').value)*1000;
+ let ppa=Number(document.getElementById('size').value);
+ let buffer=Number(document.querySelector('input[name="buf"]:checked').value);
+ let r=document.getElementById('result');
+
+ if(!your||!enemy){r.style.display='block';r.innerHTML='Enter both scores.';return;}
+
+ if(enemy>your){
+   let gap=enemy-your;
+   let anchors=Math.floor(gap/ppa)+1+buffer;
+   r.innerHTML=`<div class="big">${anchors}</div>
+   <div><b>Anchors Needed to Overtake</b></div>
+   <div class="small">Gap: ${Math.round(gap).toLocaleString()} points</div>
+   <div class="small">Ties do not win. Calculator adds 1 anchor to take the lead.</div>`;
+ } else if(your>enemy){
+   let gap=your-enemy;
+   let anchors=Math.floor(gap/ppa)+1+buffer;
+   r.innerHTML=`<div><b>Your alliance is in the lead</b></div>
+   <div class="big">${anchors}</div>
+   <div><b>Enemy Anchors Needed to Overtake</b></div>
+   <div class="small">Lead: ${Math.round(gap).toLocaleString()} points</div>`;
+ } else {
+   r.innerHTML=`<div class="big">1</div><div>Anchor needed to take the lead</div>`;
+ }
+ r.style.display='block';
+}
+</script>
+</body>
+</html>
