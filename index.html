@@ -47,13 +47,15 @@ button{background:#22c55e;color:#000;font-weight:bold;cursor:pointer}
 
 <script>
 function calc(){
- let your=Number(document.getElementById('your').value)*1000;
- let enemy=Number(document.getElementById('enemy').value)*1000;
+ let yourInput=Number(document.getElementById('your').value);
+let enemyInput=Number(document.getElementById('enemy').value);
+let your=yourInput<10000 ? yourInput*1000 : yourInput;
+let enemy=enemyInput<10000 ? enemyInput*1000 : enemyInput;
  let ppa=Number(document.getElementById('size').value);
  let buffer=Number(document.querySelector('input[name="buf"]:checked').value);
  let r=document.getElementById('result');
 
- if(!your||!enemy){r.style.display='block';r.innerHTML='Enter both scores.';return;}
+ if(document.getElementById('your').value===''||document.getElementById('enemy').value===''){r.style.display='block';r.innerHTML='Enter both scores.';return;}
 
  if(enemy>your){
    let gap=enemy-your;
